@@ -8,8 +8,8 @@ namespace MovieTicketBookingAPI.Data.Entities
 {
    public class User : IdentityUser<Guid>
     {
-        public string FirstName { get; init; }
-        public string LastName { get; init; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
     }
 }
