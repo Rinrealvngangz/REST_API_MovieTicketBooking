@@ -1,11 +1,20 @@
 namespace MovieTicketBookingAPI
 {
+    using Core.IConfiguration;
+    using Core.UnitOfWork;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using MovieTicketBookingAPI.Data;
+    using MovieTicketBookingAPI.Data.Entities;
+    using NETCore.MailKit.Core;
+    using NETCore.MailKit.Extensions;
+    using NETCore.MailKit.Infrastructure.Internal;
 
     /// <summary>
     /// Defines the <see cref="Startup" />.
@@ -35,6 +44,24 @@ namespace MovieTicketBookingAPI
         {
 
             services.AddControllers();
+            // AddIdentity registers the services
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, Role>(config =>
+            {
+
+                config.Password.RequiredLength = 6;
+                config.Password.RequireDigit = true;
+                config.Password.RequireNonAlphanumeric = true;
+                config.Password.RequireUppercase = true;
+                config.SignIn.RequireConfirmedEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+
+            services.AddMailKit(config => config.UseMailKit(Configuration.GetSection("Email").Get<MailKitOptions>()));
+          
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieTicketBookingAPI", Version = "v1" });

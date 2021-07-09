@@ -16,7 +16,7 @@ namespace MovieTicketBookingAPI.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new CustomerConfig());
+            builder.ApplyConfiguration(new UserConfig());
             builder.ApplyConfiguration(new AuditoriumConfig());
             builder.ApplyConfiguration(new MovieConfig());
             builder.ApplyConfiguration(new ReservationConfig());
@@ -28,7 +28,7 @@ namespace MovieTicketBookingAPI.Data
              base.OnModelCreating(builder);
         }
 
-        public DbSet<Customer> Customers { get; set; }
+      
         public DbSet<Auditorium> Auditoriums { get; set; }
    
         public DbSet<Movie> Movies { get; set; }

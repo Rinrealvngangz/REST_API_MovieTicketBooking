@@ -12,9 +12,9 @@ namespace MovieTicketBookingAPI.Data.Entities
 
         public bool? HasPaidTicket { get; init; }
 
-        public Customer Customer { get; init; }
+        public User User { get; init; }
 
-        public Guid CustomerId { get; init; }
+        public Guid UserId { get; init; }
 
         public Seat Seat { get; init; }
 

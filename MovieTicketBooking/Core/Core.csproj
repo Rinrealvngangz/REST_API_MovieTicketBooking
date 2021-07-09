@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MovieTicketBookingAPI.Data\MovieTicketBookingAPI.Data.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>

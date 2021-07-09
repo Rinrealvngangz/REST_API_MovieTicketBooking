@@ -1,4 +1,6 @@
-﻿using MovieTicketBookingAPI.Data.Entities;
+﻿using Dtos;
+using Microsoft.AspNetCore.Identity;
+using MovieTicketBookingAPI.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,9 @@ namespace Core.IRepository
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-     
+        Task Login(User user);
+        Task<VerifyEmailDtos> Register(UserDtos user);
+
+        Task<UserDtos> VerifyEmail(VerifyEmailDtos verifyEmailDtos);
     }
 }

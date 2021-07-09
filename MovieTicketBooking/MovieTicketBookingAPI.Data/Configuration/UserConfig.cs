@@ -9,16 +9,16 @@ using MovieTicketBookingAPI.Data.Entities;
 
 namespace MovieTicketBookingAPI.Data.Configuration
 {
-    class CustomerConfig : IEntityTypeConfiguration<Customer>
+    class UserConfig : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<Customer> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Customers");
+            builder.ToTable("AppUser");
             builder.Property(x => x.Email).IsRequired();
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(200);
             builder.Property(x => x.LastName).IsRequired().HasMaxLength(200);
             builder.HasMany( x => x.Reservations)
-                   .WithOne(x => x.Customer)
+                   .WithOne(x => x.User)
                    .IsRequired()
                    .OnDelete(DeleteBehavior.Restrict);
         }

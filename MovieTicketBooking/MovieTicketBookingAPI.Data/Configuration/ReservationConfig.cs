@@ -9,7 +9,7 @@ namespace MovieTicketBookingAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Reservation> builder)
         {
-            builder.Property(x => x.CustomerId).IsRequired();
+            builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.ScheduledMovieId).IsRequired();
             builder.Property(x => x.SeatId).IsRequired();
            
