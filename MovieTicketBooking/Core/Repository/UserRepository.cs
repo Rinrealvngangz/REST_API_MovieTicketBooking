@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Utilities.Exceptions;
 using NETCore.MailKit.Core;
 using Dtos;
-
+using Utilities.Extension;
 namespace Core.Repository
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
@@ -86,7 +86,7 @@ namespace Core.Repository
             }
             else
             {
-                throw new MovieTicketBookingExceptions($"{result.Errors}");
+                throw new MovieTicketBookingExceptions($"{result.Errors.AsToDescription()}");
             }
             
             throw new MovieTicketBookingExceptions("Email is not exist");
@@ -95,11 +95,13 @@ namespace Core.Repository
 
         public async Task<UserDtos> VerifyEmail(VerifyEmailDtos verifyEmailDtos)
         {
+            
            var existUser = await _userManager.FindByIdAsync(verifyEmailDtos.UserId.ToString());
             if (existUser == null) throw new MovieTicketBookingExceptions("User is not exits");
              var result =  await _userManager.ConfirmEmailAsync(existUser, verifyEmailDtos.Code);
             if (result.Succeeded)
             {
+             
                 return new UserDtos()
                 {
                     UserName =existUser.UserName,

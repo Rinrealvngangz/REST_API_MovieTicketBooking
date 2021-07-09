@@ -48,15 +48,17 @@ namespace MovieTicketBookingAPI.Controllers
 
         [HttpPost]
         [Route("VerifyEmail")]
+       
         public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailDtos verifyEmailDtos)
         {
-          
             var result =  await _unitOfWork.User.VerifyEmail(verifyEmailDtos);
+                          
             if (result !=null)
             {
                 return Ok(result);
             }
             return BadRequest();
+         
         }
 
     }
