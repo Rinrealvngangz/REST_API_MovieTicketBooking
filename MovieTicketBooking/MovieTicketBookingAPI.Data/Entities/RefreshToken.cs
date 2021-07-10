@@ -10,7 +10,7 @@ namespace MovieTicketBookingAPI.Data.Entities
 {
    public record RefreshToken
     {
-        public int Id { get; init; }
+        public Guid Id { get; init; }
         public Guid UserId { get; init; }
         public string Token { get; init; }
         public string JwtId { get; init; }

@@ -9,6 +9,8 @@ namespace Core.IConfiguration
    public interface IUnitOfWork
     {
         IUserRepository User { get; }
+
+        IAuthenRepository Authen { get; }
         Task CompleteAsync();
     }
 }

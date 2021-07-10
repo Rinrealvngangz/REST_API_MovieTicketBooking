@@ -10,8 +10,8 @@ using MovieTicketBookingAPI.Data;
 namespace MovieTicketBookingAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210708095343_Init AppDbContext")]
-    partial class InitAppDbContext
+    [Migration("20210710050053_change type col guid refreshToken")]
+    partial class changetypecolguidrefreshToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,34 +140,6 @@ namespace MovieTicketBookingAPI.Data.Migrations
                     b.ToTable("Auditoriums");
                 });
 
-            modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Customer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool?>("IsVip")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Movie", b =>
                 {
                     b.Property<Guid>("Id")
@@ -194,10 +166,9 @@ namespace MovieTicketBookingAPI.Data.Migrations
 
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.RefreshToken", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
@@ -233,9 +204,6 @@ namespace MovieTicketBookingAPI.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool?>("HasPaidTicket")
                         .HasColumnType("bit");
 
@@ -245,13 +213,16 @@ namespace MovieTicketBookingAPI.Data.Migrations
                     b.Property<Guid>("SeatId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ScheduledMovieId");
 
                     b.HasIndex("SeatId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -393,6 +364,7 @@ namespace MovieTicketBookingAPI.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -400,10 +372,17 @@ namespace MovieTicketBookingAPI.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool?>("IsVip")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -515,12 +494,6 @@ namespace MovieTicketBookingAPI.Data.Migrations
 
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Reservation", b =>
                 {
-                    b.HasOne("MovieTicketBookingAPI.Data.Entities.Customer", "Customer")
-                        .WithMany("Reservations")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("MovieTicketBookingAPI.Data.Entities.ScheduledMovie", "ScheduledMovie")
                         .WithMany("Reservations")
                         .HasForeignKey("ScheduledMovieId")
@@ -533,11 +506,17 @@ namespace MovieTicketBookingAPI.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("MovieTicketBookingAPI.Data.Entities.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ScheduledMovie");
 
                     b.Navigation("Seat");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Row", b =>
@@ -596,11 +575,6 @@ namespace MovieTicketBookingAPI.Data.Migrations
                     b.Navigation("ScheduledMovies");
                 });
 
-            modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Customer", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.Movie", b =>
                 {
                     b.Navigation("ScheduledMovies");
@@ -624,6 +598,11 @@ namespace MovieTicketBookingAPI.Data.Migrations
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.SeatType", b =>
                 {
                     b.Navigation("Seats");
+                });
+
+            modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.User", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

@@ -32,33 +32,54 @@ namespace MovieTicketBookingAPI.Controllers
             }
 
             var verifyEmailDtos = await _unitOfWork.User.Register(item);
+         
             if (verifyEmailDtos == null) return BadRequest();
-            return Created("api/VerifyEmail/{userId}/{code}", new { userId = verifyEmailDtos.UserId, code = verifyEmailDtos.Code });
+            return  Ok(new { UserId = verifyEmailDtos.UserId, Code = verifyEmailDtos.Code });
 
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login([FromBody] LoginDtos item)
         {
+         
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => x.Value.Errors)
+                       .Where(y => y.Count > 0)
+                       .ToList();
 
-            return Ok("Hello");
+                return BadRequest(errors);
+            }
+            var user = await _unitOfWork.User.Login(item);
+            return Ok(user);
         }
 
 
         [HttpPost]
         [Route("VerifyEmail")]
-       
         public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailDtos verifyEmailDtos)
         {
-            var result =  await _unitOfWork.User.VerifyEmail(verifyEmailDtos);
-                          
-            if (result !=null)
+            var existUser =  await _unitOfWork.User.VerifyEmail(verifyEmailDtos);
+                            
+            if (existUser !=null)
             {
-                return Ok(result);
+               var response = await  _unitOfWork.Authen.GenerateToken(existUser);
+                await _unitOfWork.CompleteAsync();
+                return Ok(response);
             }
             return BadRequest();
          
+        }
+
+        [HttpPost]
+        [Route("RefreshToken")]
+
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDtos refreshTokenDtos )
+        {
+           var response =await _unitOfWork.Authen.VerifyRefreshToken(refreshTokenDtos);
+                         await _unitOfWork.CompleteAsync();
+            return Ok(response);
         }
 
     }

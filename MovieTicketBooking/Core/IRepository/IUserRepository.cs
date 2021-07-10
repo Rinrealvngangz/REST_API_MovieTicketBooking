@@ -11,9 +11,11 @@ namespace Core.IRepository
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task Login(User user);
+        Task<UserDtos> Login(LoginDtos login);
         Task<VerifyEmailDtos> Register(UserDtos user);
 
-        Task<UserDtos> VerifyEmail(VerifyEmailDtos verifyEmailDtos);
+        Task<User> VerifyEmail(VerifyEmailDtos verifyEmailDtos);
+
+        
     }
 }

@@ -164,10 +164,9 @@ namespace MovieTicketBookingAPI.Data.Migrations
 
             modelBuilder.Entity("MovieTicketBookingAPI.Data.Entities.RefreshToken", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");

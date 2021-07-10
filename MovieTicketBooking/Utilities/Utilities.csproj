@@ -8,4 +8,9 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dtos\Dtos.csproj" />
+    <ProjectReference Include="..\MovieTicketBookingAPI.Data\MovieTicketBookingAPI.Data.csproj" />
+  </ItemGroup>
+
 </Project>

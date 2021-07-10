@@ -12,9 +12,12 @@ namespace MovieTicketBookingAPI
     using Microsoft.OpenApi.Models;
     using MovieTicketBookingAPI.Data;
     using MovieTicketBookingAPI.Data.Entities;
-    using NETCore.MailKit.Core;
     using NETCore.MailKit.Extensions;
     using NETCore.MailKit.Infrastructure.Internal;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Text;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Core.Config;
 
     /// <summary>
     /// Defines the <see cref="Startup" />.
@@ -45,7 +48,8 @@ namespace MovieTicketBookingAPI
 
             services.AddControllers();
             // AddIdentity registers the services
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                                                           .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
             services.AddIdentity<User, Role>(config =>
             {
@@ -55,17 +59,47 @@ namespace MovieTicketBookingAPI
                 config.Password.RequireNonAlphanumeric = true;
                 config.Password.RequireUppercase = true;
                 config.SignIn.RequireConfirmedEmail = true;
+               
             }).AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
 
             services.AddMailKit(config => config.UseMailKit(Configuration.GetSection("Email").Get<MailKitOptions>()));
-          
+
+ 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieTicketBookingAPI", Version = "v1" });
             });
+
+            // config JWT Authentication
+
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:KeySecret"]);
+             
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                RequireExpirationTime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+
+            };
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = tokenValidationParameters;
+                
+            }
+            
+           );
+
+            services.AddSingleton(tokenValidationParameters);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
