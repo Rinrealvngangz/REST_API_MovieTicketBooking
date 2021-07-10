@@ -26,24 +26,39 @@ namespace Core.Repository
             _emailService = emailService;
         }
 
-        public async override Task<bool> UpdateAsync(User item)
+        public async override Task<bool> UpdateAsync(string id , string password, User item)
         {
-            var existuser = await GetByIdAsync(item.Id);
-            if (existuser == null) throw new MovieTicketBookingExceptions("No exits user");
+            var existuser = await GetByIdAsync(Guid.Parse(id));
+            if (existuser == null) throw new MovieTicketBookingExceptions("No exist user");
 
-            var isExistMail = await _dbSet.Where(x => x.Email == item.Email).FirstOrDefaultAsync();
+            var isExistMail = await _userManager.FindByEmailAsync(item.Email);
 
-            if (isExistMail != null) throw new MovieTicketBookingExceptions("Already email");
+            if (isExistMail == null) throw new MovieTicketBookingExceptions("No exist email");
 
-            existuser.Email = item.Email;
+            var isUser = await _userManager.CheckPasswordAsync(existuser, password);
+                              
+            if (isUser)
+            {
+                var existUserName = await _userManager.FindByNameAsync(item.UserName);
+                if ( existUserName !=null && item.UserName.Equals(existuser.UserName) || existUserName == null ) {
+                    existuser.UserName = item.UserName;
+                }
+                else
+                {
+                    throw new MovieTicketBookingExceptions("Exist UserName");
+                }
+          
+                existuser.Email = item.Email;
 
-            existuser.FirstName = item.FirstName;
+                existuser.FirstName = item.FirstName;
 
-            existuser.LastName = item.LastName;
-
-            _dbSet.Update(existuser);
-
-            return true;
+                existuser.LastName = item.LastName;
+                existuser.IsVip =item.IsVip;
+                _dbSet.Update(existuser);
+                return true;
+            }
+            return false;
+         
         }
 
         public async override Task<bool> DeleteAsync(Guid id)
@@ -58,6 +73,9 @@ namespace Core.Repository
         {
            
            var existUser = await _userManager.FindByEmailAsync(login.Email);
+                                            
+             //var roleUser = await _userManager.GetRolesAsync(existUser);
+           
             if (existUser == null) throw new MovieTicketBookingExceptions("Email is not exist");
        
             if (existUser.EmailConfirmed)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dtos
 {
-    public class UserDtos
+    public record UserDtos
     {
         [Required]
         public string UserName { get; set; }

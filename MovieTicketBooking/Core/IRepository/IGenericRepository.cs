@@ -14,7 +14,7 @@ namespace Core.IRepository
 
         Task<bool> AddAsync(T item);
 
-        Task<bool> UpdateAsync(T item);
+        Task<bool> UpdateAsync(string id ,string password , T item);
 
         Task<bool> DeleteAsync(Guid id);
     }

@@ -14,7 +14,7 @@ namespace MovieTicketBookingAPI.Data.Entities
         
         public string LastName { get; set; }
 
-        public bool? IsVip { get; init; }
+        public bool? IsVip { get; set; }
 
         public ICollection<Reservation> Reservations { get; init; }
     }

@@ -40,7 +40,7 @@ namespace Core.Repository
             return item;
         }
 
-        public virtual Task<bool> UpdateAsync(T item)
+        public virtual Task<bool> UpdateAsync(string id ,string password,T item)
         {
             throw new NotImplementedException();
         }
