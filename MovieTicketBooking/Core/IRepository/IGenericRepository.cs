@@ -12,9 +12,9 @@ namespace Core.IRepository
 
         Task<T> GetByIdAsync(Guid id);
 
-        Task<bool> AddAsync(T item);
+        Task<T> AddAsync(T item);
 
-        Task<bool> UpdateAsync(string id ,string password , T item);
+        Task<bool> UpdateAsync(strin id ,T item);
 
         Task<bool> DeleteAsync(Guid id);
     }

@@ -17,11 +17,12 @@ namespace Core.Repository
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
         }
-        public virtual async Task<bool> AddAsync(T item)
+        public virtual async Task<T> AddAsync(T item)
         {
 
-           await _dbSet.AddAsync(item);
-            return true;
+            await _dbSet.AddAsync(item);
+            return item;
+    
         }
 
         public virtual Task<bool> DeleteAsync(Guid id)
@@ -29,7 +30,7 @@ namespace Core.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -40,7 +41,7 @@ namespace Core.Repository
             return item;
         }
 
-        public virtual Task<bool> UpdateAsync(string id ,string password,T item)
+        public virtual Task<bool> UpdateAsync(string id ,T item)
         {
             throw new NotImplementedException();
         }

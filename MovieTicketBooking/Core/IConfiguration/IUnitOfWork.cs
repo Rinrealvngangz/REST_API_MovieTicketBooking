@@ -11,6 +11,8 @@ namespace Core.IConfiguration
         IUserRepository User { get; }
 
         IAuthenRepository Authen { get; }
+
+        IRoleRepository Role { get; }
         Task CompleteAsync();
     }
 }

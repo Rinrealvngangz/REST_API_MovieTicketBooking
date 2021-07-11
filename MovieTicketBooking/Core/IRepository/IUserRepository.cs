@@ -16,6 +16,6 @@ namespace Core.IRepository
 
         Task<User> VerifyEmail(VerifyEmailDtos verifyEmailDtos);
 
-        
+        Task<bool> UpdateUserAsync(string id , string password ,User item);
     }
 }

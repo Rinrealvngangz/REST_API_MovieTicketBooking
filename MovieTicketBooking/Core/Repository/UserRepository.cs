@@ -6,6 +6,7 @@ using MovieTicketBookingAPI.Data;
 using MovieTicketBookingAPI.Data.Entities;
 using NETCore.MailKit.Core;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities.Exceptions;
@@ -26,7 +27,8 @@ namespace Core.Repository
             _emailService = emailService;
         }
 
-        public async override Task<bool> UpdateAsync(string id , string password, User item)
+       
+        public async  Task<bool> UpdateUserAsync(string id , string password, User item)
         {
             var existuser = await GetByIdAsync(Guid.Parse(id));
             if (existuser == null) throw new MovieTicketBookingExceptions("No exist user");

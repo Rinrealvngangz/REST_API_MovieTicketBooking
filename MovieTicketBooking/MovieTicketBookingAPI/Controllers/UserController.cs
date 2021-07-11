@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Utilities.Extension;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -19,6 +19,23 @@ namespace MovieTicketBookingAPI.Controllers
         public UserController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+           var users =  await _unitOfWork.User.GetAllAsync().AsToListUserDtos();
+            if (users == null) return NotFound();
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            var user = await _unitOfWork.User.GetByIdAsync(Guid.Parse(id));
+            if (user == null) return NotFound();
+            return Ok(user.AsToUserDtos());
+
         }
 
         [HttpPut("{id}")]

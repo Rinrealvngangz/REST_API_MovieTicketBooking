@@ -18,13 +18,17 @@ namespace Core.UnitOfWork
    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IEmailService _emailService;
         private readonly AppDbContext _appDbContext;
         private readonly IOptionsMonitor<JwtConfig> _optionsMonitor;
         private readonly TokenValidationParameters _tokenValidationParameters;
         public  IUserRepository User { get; private set; }
         public IAuthenRepository Authen { get; private set; }
+
+        public  IRoleRepository Role { get; private set; }
         public UnitOfWork(UserManager<User> userManager,
+                          RoleManager<Role> roleManager,
                           IEmailService emailService,
                           AppDbContext appDbContext,
                           IOptionsMonitor<JwtConfig> optionsMonitor,
@@ -32,12 +36,14 @@ namespace Core.UnitOfWork
                            )
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _emailService = emailService;
             _appDbContext = appDbContext;
             _optionsMonitor = optionsMonitor;
             _tokenValidationParameters = tokenValidationParameters;
             User = new UserRepository(_appDbContext, _userManager, _emailService);
             Authen = new AuthenRepository(_appDbContext, _optionsMonitor, _userManager, _tokenValidationParameters);
+            Role = new RoleRepository(_roleManager,_appDbContext);
         }
        
 

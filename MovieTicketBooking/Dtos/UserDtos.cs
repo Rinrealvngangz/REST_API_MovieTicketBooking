@@ -5,6 +5,9 @@ namespace Dtos
 {
     public record UserDtos
     {
+
+        public Guid Id { get; set; }
+
         [Required]
         public string UserName { get; set; }
         [Required]
