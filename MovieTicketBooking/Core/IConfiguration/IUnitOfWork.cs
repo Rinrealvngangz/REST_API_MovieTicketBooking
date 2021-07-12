@@ -13,6 +13,8 @@ namespace Core.IConfiguration
         IAuthenRepository Authen { get; }
 
         IRoleRepository Role { get; }
+
+        IUserRoleRepository UserRole { get; }
         Task CompleteAsync();
     }
 }

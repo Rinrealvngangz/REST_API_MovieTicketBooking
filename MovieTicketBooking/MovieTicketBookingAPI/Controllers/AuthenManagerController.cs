@@ -52,7 +52,8 @@ namespace MovieTicketBookingAPI.Controllers
                 return BadRequest(errors);
             }
             var user = await _unitOfWork.User.Login(item);
-            return Ok(user);
+            var responseJwtToken = await _unitOfWork.Authen.GenerateToken(user);
+            return Ok(responseJwtToken);
         }
 
 

@@ -40,5 +40,14 @@ namespace Utilities.Extension
                 Description = role.Description
             };
         }
+
+        public async static Task<List<RoleDtos>> AsToListRoleDtos(this Task<IEnumerable<Role>> roles)
+        {
+            List<RoleDtos> roleDtos = new List<RoleDtos>();
+            var listUsers = await roles;
+            listUsers.ToList().ForEach(x => roleDtos.Add(x.AsToRoleDtos()));
+            return roleDtos;
+
+        }
     }
 }

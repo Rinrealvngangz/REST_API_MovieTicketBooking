@@ -23,10 +23,12 @@ namespace Core.UnitOfWork
         private readonly AppDbContext _appDbContext;
         private readonly IOptionsMonitor<JwtConfig> _optionsMonitor;
         private readonly TokenValidationParameters _tokenValidationParameters;
-        public  IUserRepository User { get; private set; }
+        public IUserRepository User { get; private set; }
         public IAuthenRepository Authen { get; private set; }
 
         public  IRoleRepository Role { get; private set; }
+
+        public IUserRoleRepository UserRole { get; private set; }
         public UnitOfWork(UserManager<User> userManager,
                           RoleManager<Role> roleManager,
                           IEmailService emailService,
@@ -44,6 +46,7 @@ namespace Core.UnitOfWork
             User = new UserRepository(_appDbContext, _userManager, _emailService);
             Authen = new AuthenRepository(_appDbContext, _optionsMonitor, _userManager, _tokenValidationParameters);
             Role = new RoleRepository(_roleManager,_appDbContext);
+            UserRole = new UserRoleRepository(_userManager, _roleManager);
         }
        
 

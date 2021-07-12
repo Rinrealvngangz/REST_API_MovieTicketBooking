@@ -51,7 +51,7 @@ namespace MovieTicketBookingAPI.Controllers
                 IsVip =userDtos.IsVip
             };
   
-           var result =  await  _unitOfWork.User.UpdateAsync(id, userDtos.Password ,User);
+           var result =  await  _unitOfWork.User.UpdateUserAsync(id, userDtos.Password ,User);
                          await _unitOfWork.CompleteAsync();
             if (result)
             {
@@ -70,6 +70,15 @@ namespace MovieTicketBookingAPI.Controllers
                 return NoContent();
             }
 
+            return BadRequest();
+        }
+        [HttpPost]
+        [Route("{id}/AddUserRole")]
+
+        public async Task<IActionResult> AddUserRoleAsync(string id ,[FromBody] RoleDtos roleDtos)
+        {
+           var result = await _unitOfWork.UserRole.AddUserRoleAsync(id, roleDtos.Id.ToString());
+            if (result) return Ok();
             return BadRequest();
         }
     }

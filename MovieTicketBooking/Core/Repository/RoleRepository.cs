@@ -45,6 +45,18 @@ namespace Core.Repository
             return true;
         }
 
+        public override async Task<bool> DeleteAsync(Guid id)
+        {
+            var role = await _roleManager.FindByIdAsync(id.ToString());
+            
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
 }

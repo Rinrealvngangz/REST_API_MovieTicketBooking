@@ -71,7 +71,7 @@ namespace Core.Repository
             return true;
         }
 
-        public async Task<UserDtos> Login(LoginDtos login)
+        public async Task<User> Login(LoginDtos login)
         {
            
            var existUser = await _userManager.FindByEmailAsync(login.Email);
@@ -85,7 +85,8 @@ namespace Core.Repository
                 var isUser = await _userManager.CheckPasswordAsync(existUser, login.Password);
                 if (isUser)
                 {
-                    return existUser.AsToUserDtos();
+                    
+                    return existUser;
                 }
             }
             else
@@ -142,5 +143,7 @@ namespace Core.Repository
             }
             throw new MovieTicketBookingExceptions("Email is not exist");
         }
+
+      
     }
 }
