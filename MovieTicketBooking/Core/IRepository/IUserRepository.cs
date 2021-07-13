@@ -18,6 +18,6 @@ namespace Core.IRepository
 
         Task<bool> UpdateUserAsync(string id , string password ,User item);
 
-      
+        Task<IEnumerable<UserDtos>> GetAllUserRoleAsync();
     }
 }

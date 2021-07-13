@@ -1,17 +1,20 @@
 ﻿using Core.IConfiguration;
 using Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicketBookingAPI.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Utilities.Extension;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = CustomeRoles.Administrator)]
     public class UserController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +27,9 @@ namespace MovieTicketBookingAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-           var users =  await _unitOfWork.User.GetAllAsync().AsToListUserDtos();
+          
+            // var users =  await _unitOfWork.User.GetAllAsync().AsToListUserDtos();
+            var users = await _unitOfWork.User.GetAllUserRoleAsync();
             if (users == null) return NotFound();
             return Ok(users);
         }
@@ -39,7 +44,6 @@ namespace MovieTicketBookingAPI.Controllers
         }
 
         [HttpPut("{id}")]
-
         public async Task<IActionResult> Update(string id ,[FromBody] UserDtos userDtos)
         {
             var User = new User

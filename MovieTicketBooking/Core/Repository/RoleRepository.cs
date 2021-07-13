@@ -14,10 +14,13 @@ namespace Core.Repository
    public class RoleRepository : GenericRepository<Role> , IRoleRepository
     {
         private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
         public RoleRepository(RoleManager<Role> roleManager,
-                              AppDbContext appDbContext):base(appDbContext)
+                              AppDbContext appDbContext,
+                               UserManager<User> userManager) :base(appDbContext)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async override Task<Role> AddAsync(Role item)
@@ -48,9 +51,10 @@ namespace Core.Repository
         public override async Task<bool> DeleteAsync(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
-            
+           
+            var existUserInRole =  await _userManager.GetUsersInRoleAsync(role.Name);
+             if(existUserInRole.Count >0) throw new MovieTicketBookingExceptions("User has this role, Cannot delete");
             var result = await _roleManager.DeleteAsync(role);
-
             if (result.Succeeded)
             {
                 return true;

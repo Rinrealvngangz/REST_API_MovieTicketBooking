@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dtos
@@ -23,5 +24,7 @@ namespace Dtos
         public string LastName { get; set; }
 
         public bool? IsVip { get; init; }
+
+        public List<string> NameRoles { get; set; }
     }
 }

@@ -45,7 +45,7 @@ namespace Core.UnitOfWork
             _tokenValidationParameters = tokenValidationParameters;
             User = new UserRepository(_appDbContext, _userManager, _emailService);
             Authen = new AuthenRepository(_appDbContext, _optionsMonitor, _userManager, _tokenValidationParameters);
-            Role = new RoleRepository(_roleManager,_appDbContext);
+            Role = new RoleRepository(_roleManager,_appDbContext,_userManager);
             UserRole = new UserRoleRepository(_userManager, _roleManager);
         }
        

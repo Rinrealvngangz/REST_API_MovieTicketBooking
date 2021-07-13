@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Core.IRepository
    public interface IUserRoleRepository
     {
         Task<bool> AddUserRoleAsync(string userId, string roleId);
+
+       
     }
 }

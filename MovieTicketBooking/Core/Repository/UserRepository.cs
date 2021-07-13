@@ -27,7 +27,30 @@ namespace Core.Repository
             _emailService = emailService;
         }
 
-       
+        public  async Task<IEnumerable<UserDtos>> GetAllUserRoleAsync()
+        {
+                var users = await base.GetAllAsync();
+            List<UserDtos> userDtos = new List<UserDtos>();
+              foreach(var item in users)
+            {
+                var userRole = await _userManager.GetRolesAsync(item);
+                var user = new UserDtos
+                {
+                    Id = item.Id,
+                    UserName = item.UserName,
+                    Email = item.Email,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    IsVip = item.IsVip,
+                    NameRoles = new List<string>(userRole)
+
+                };
+                userDtos.Add(user);
+            }
+
+            return userDtos; 
+        }
+
         public async  Task<bool> UpdateUserAsync(string id , string password, User item)
         {
             var existuser = await GetByIdAsync(Guid.Parse(id));

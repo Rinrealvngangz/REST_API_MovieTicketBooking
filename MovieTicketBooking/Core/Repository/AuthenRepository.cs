@@ -22,6 +22,7 @@ namespace Core.Repository
         private readonly JwtConfig _jwtConfig;
         private readonly UserManager<User> _userManager;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private  List<Claim>Claim =null;
         public AuthenRepository(AppDbContext appDbContext,
                                 IOptionsMonitor<JwtConfig> optionsMonitor,
                                 UserManager<User> userManager,
@@ -37,14 +38,22 @@ namespace Core.Repository
             var key = _jwtConfig.KeySecret;
             var roles = await _userManager.GetRolesAsync(user);
             var jwtHandler = new JwtSecurityTokenHandler();
-            IEnumerable<Claim> Claim = new[]
-          {
+          
+    
+
+             Claim = new List<Claim>
+            {
                 new Claim("ID",user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub,user.Email),
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
-                new Claim(ClaimTypes.Role,String.Join(';',roles))
+                
             };
+            foreach (var item in roles)
+            {
+                Claim.Add(new Claim(ClaimTypes.Role, item));
+            }
+            
             var ClaimIdentity = new ClaimsIdentity(Claim);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
