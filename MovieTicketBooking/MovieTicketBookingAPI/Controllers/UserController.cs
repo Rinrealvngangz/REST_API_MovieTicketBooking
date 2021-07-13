@@ -85,5 +85,17 @@ namespace MovieTicketBookingAPI.Controllers
             if (result) return Ok();
             return BadRequest();
         }
+
+        [HttpDelete]
+        [Route("{id}/RemoveUserRole")]
+        public async Task<IActionResult> RemoveRoleFromUserAsync(string id , [FromBody] List<RoleDtos> IdRoles)
+        {
+            if(IdRoles is null) return BadRequest(); 
+            var roles = new List<string>();
+            IdRoles.ForEach(x => roles.Add(x.Name));
+            var result = await _unitOfWork.UserRole.RemoveUserRoleAsync(id,roles);
+            if (result) return NoContent();
+            return BadRequest();
+        }
     }
 }

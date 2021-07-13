@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Core.IRepository
 {
-   public interface IUserRoleRepository
+    public interface IUserRoleRepository
     {
         Task<bool> AddUserRoleAsync(string userId, string roleId);
+        Task<bool> RemoveUserRoleAsync(string userId, List<string> roleId);
 
-       
     }
 }
