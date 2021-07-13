@@ -1,4 +1,5 @@
 ﻿
+using Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Core.IRepository
 {
     public interface IUserRoleRepository
     {
-        Task<bool> AddUserRoleAsync(string userId, string roleId);
-        Task<bool> RemoveUserRoleAsync(string userId, List<string> roleId);
+        Task<bool> AddUserRoleAsync(string userId, List<RoleDtos> roleId);
+        Task<bool> RemoveUserRoleAsync(string userId, List<RoleDtos> roleId);
 
     }
 }

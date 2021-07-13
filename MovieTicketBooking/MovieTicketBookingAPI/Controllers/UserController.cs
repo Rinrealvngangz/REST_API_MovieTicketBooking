@@ -79,9 +79,9 @@ namespace MovieTicketBookingAPI.Controllers
         [HttpPost]
         [Route("{id}/AddUserRole")]
 
-        public async Task<IActionResult> AddUserRoleAsync(string id ,[FromBody] RoleDtos roleDtos)
+        public async Task<IActionResult> AddUserRoleAsync(string id ,[FromBody] List<RoleDtos> roleDtos)
         {
-           var result = await _unitOfWork.UserRole.AddUserRoleAsync(id, roleDtos.Id.ToString());
+           var result = await _unitOfWork.UserRole.AddUserRoleAsync(id, roleDtos);
             if (result) return Ok();
             return BadRequest();
         }
@@ -90,10 +90,8 @@ namespace MovieTicketBookingAPI.Controllers
         [Route("{id}/RemoveUserRole")]
         public async Task<IActionResult> RemoveRoleFromUserAsync(string id , [FromBody] List<RoleDtos> IdRoles)
         {
-            if(IdRoles is null) return BadRequest(); 
-            var roles = new List<string>();
-            IdRoles.ForEach(x => roles.Add(x.Name));
-            var result = await _unitOfWork.UserRole.RemoveUserRoleAsync(id,roles);
+            if(IdRoles is null) return BadRequest();         
+            var result = await _unitOfWork.UserRole.RemoveUserRoleAsync(id,IdRoles);
             if (result) return NoContent();
             return BadRequest();
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.IRepository;
+using Dtos;
 using Microsoft.AspNetCore.Identity;
 using MovieTicketBookingAPI.Data.Entities;
 using Utilities.Exceptions;
@@ -21,25 +22,33 @@ namespace Core.Repository
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<bool> AddUserRoleAsync(string userId, string roleId)
+        public async Task<bool> AddUserRoleAsync(string userId, List<RoleDtos> IdRoles)
         {
             var existUser = await  _userManager.FindByIdAsync(userId);
-
+            List<string> NameRoles = new List<string>();
             if(existUser == null) throw new MovieTicketBookingExceptions("User is not exits");
-
-            var existRole = await _roleManager.FindByIdAsync(roleId);
-
-            if(existRole == null) throw new MovieTicketBookingExceptions("Role is not exits");
-
-            var result = await _userManager.AddToRoleAsync(existUser, existRole.Name);
-            if (result.Succeeded)
+            foreach (var item in IdRoles)
             {
-                return true;
+                var existRole = await _roleManager.FindByIdAsync(item.Id.ToString());
+                if (existRole == null) throw new MovieTicketBookingExceptions("Role is not exits");
+                NameRoles.Add(item.Name);
             }
-            return false;
+            if(NameRoles.Count > 0)
+            {
+                foreach (var role in NameRoles)
+                {
+                    await _userManager.AddToRoleAsync(existUser, role);
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+                return true;      
         }
     
-        public async Task<bool> RemoveUserRoleAsync(string userId, List<string> IdRoles)
+        public async Task<bool> RemoveUserRoleAsync(string userId, List<RoleDtos> IdRoles)
         {
            
             bool check = false;
@@ -49,7 +58,7 @@ namespace Core.Repository
 
             foreach ( var item in IdRoles)
             {
-                var existRole = await _roleManager.FindByNameAsync(item);
+                var existRole = await _roleManager.FindByNameAsync(item.Name);
                 if(existRole != null)
                 {
                     check = true;
