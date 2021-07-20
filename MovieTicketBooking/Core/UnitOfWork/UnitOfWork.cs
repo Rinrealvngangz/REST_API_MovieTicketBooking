@@ -29,6 +29,9 @@ namespace Core.UnitOfWork
         public  IRoleRepository Role { get; private set; }
 
         public IUserRoleRepository UserRole { get; private set; }
+
+        public IAuditoriumRepository Auditorium { get; private set; }
+
         public UnitOfWork(UserManager<User> userManager,
                           RoleManager<Role> roleManager,
                           IEmailService emailService,
@@ -47,6 +50,7 @@ namespace Core.UnitOfWork
             Authen = new AuthenRepository(_appDbContext, _optionsMonitor, _userManager, _tokenValidationParameters);
             Role = new RoleRepository(_roleManager,_appDbContext,_userManager);
             UserRole = new UserRoleRepository(_userManager, _roleManager);
+            Auditorium = new AuditoriumRepository(_appDbContext);
         }
        
 

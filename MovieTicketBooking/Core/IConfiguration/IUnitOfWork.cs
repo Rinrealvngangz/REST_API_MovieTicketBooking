@@ -15,6 +15,8 @@ namespace Core.IConfiguration
         IRoleRepository Role { get; }
 
         IUserRoleRepository UserRole { get; }
+
+        IAuditoriumRepository Auditorium { get; }
         Task CompleteAsync();
     }
 }
