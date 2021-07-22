@@ -19,10 +19,8 @@ namespace Core.Repository
         }
         public virtual async Task<T> AddAsync(T item)
         {
-
             await _dbSet.AddAsync(item);
             return item;
-    
         }
 
         public virtual Task<bool> DeleteAsync(Guid id)

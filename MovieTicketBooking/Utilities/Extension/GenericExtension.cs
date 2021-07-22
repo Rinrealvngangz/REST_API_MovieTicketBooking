@@ -49,5 +49,52 @@ namespace Utilities.Extension
             return roleDtos;
 
         }
+
+        public static AuditoriumDtos AsToAuditoriumDtos(this Auditorium auditorium)
+        {
+
+            return new AuditoriumDtos
+            {
+                Id = auditorium.Id,
+                Name = auditorium.Name,
+                Capacity = auditorium.Capacity
+            };
+        }
+
+        public static RowDtos AsToRowDtos(this Row row)
+        {
+
+            return new RowDtos
+            {
+                Id = row.Id,
+                Number = row.Number,
+                AuditoriumId =row.AuditoriumId
+            };
+        }
+
+        public static IEnumerable<AuditoriumDtos> AsToAuditoriumViewDtos(this IEnumerable<Auditorium> ListAuditorium)
+        {
+       
+            var viewListAuditoriumDtos = new List<AuditoriumDtos>();
+            foreach (var item in ListAuditorium)
+            {
+                var rows = new List<RowDtos>();
+               if(item.Rows.Count >0 )
+                {
+                    item.Rows.ToList().ForEach(x => rows.Add(x.AsToRowDtos()));
+                }
+                  
+                var auditorium = new AuditoriumDtos
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Rows = rows
+                };
+                viewListAuditoriumDtos.Add(auditorium);
+            }
+            return viewListAuditoriumDtos;
+
+
+        }
     }
 }

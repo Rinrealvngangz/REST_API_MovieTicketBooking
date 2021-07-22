@@ -49,7 +49,7 @@ namespace MovieTicketBookingAPI
             services.AddControllers();
             // AddIdentity registers the services
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                                                           .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+                                                          .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
             services.AddIdentity<User, Role>(config =>
             {
