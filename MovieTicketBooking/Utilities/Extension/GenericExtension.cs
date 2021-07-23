@@ -83,11 +83,12 @@ namespace Utilities.Extension
                 {
                     item.Rows.ToList().ForEach(x => rows.Add(x.AsToRowDtos()));
                 }
-                  
+
                 var auditorium = new AuditoriumDtos
                 {
                     Id = item.Id,
                     Name = item.Name,
+                    Capacity = item.Capacity,
                     Rows = rows
                 };
                 viewListAuditoriumDtos.Add(auditorium);
