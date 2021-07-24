@@ -42,7 +42,9 @@ namespace Core.Repository
 
         public override async Task<bool> DeleteAsync(Guid id)
         {
-            var exists = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            var exists = await _dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == id);
+            await _dbContext.Entry(exists).Collection(x => x.Rows).LoadAsync();
+             if(exists.Rows.Count > 0) throw new MovieTicketBookingExceptions("Cannot delete. Because exists row this auditorium.");
             if (exists == null) throw new MovieTicketBookingExceptions("id not exists");
                _dbSet.Remove(exists);
             return true;

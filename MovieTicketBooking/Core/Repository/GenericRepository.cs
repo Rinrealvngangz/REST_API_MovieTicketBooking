@@ -33,7 +33,7 @@ namespace Core.Repository
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public virtual async Task<T> GetByIdAsync(Guid id)
         {
            var item = await _dbSet.FindAsync(id);
             return item;

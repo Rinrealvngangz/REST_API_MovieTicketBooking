@@ -26,6 +26,7 @@ namespace MovieTicketBookingAPI.Controllers
         public async Task<ActionResult> GetAuditorium(Guid id)
         {
             var item = await _unitOfWork.Auditorium.GetByIdAsync(id);
+        
             if (item == null) BadRequest();
             return Ok(item.AsToAuditoriumDtos());
         }

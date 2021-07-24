@@ -15,7 +15,7 @@ namespace Dtos
         public string Name { get; init; }
         [Required]
         public int Capacity { get; init; }
-
+        
         public List<RowDtos> Rows { get; init; }
 
 

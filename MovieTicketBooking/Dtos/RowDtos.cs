@@ -13,7 +13,10 @@ namespace Dtos
 
         [Required]
         public int Number { get; init; }
+
         [Required]
         public Guid AuditoriumId { get; init; }
+
+       
     }
 }

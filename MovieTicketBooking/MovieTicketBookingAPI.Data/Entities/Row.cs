@@ -16,6 +16,7 @@ namespace MovieTicketBookingAPI.Data.Entities
 
         public Guid AuditoriumId { get; init; }
 
+        [System.Text.Json.Serialization.JsonIgnore]
         public Auditorium Auditorium { get; init; }
 
 

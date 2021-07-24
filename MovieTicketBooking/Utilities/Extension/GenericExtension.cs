@@ -52,12 +52,32 @@ namespace Utilities.Extension
 
         public static AuditoriumDtos AsToAuditoriumDtos(this Auditorium auditorium)
         {
-
+            List<RowDtos> listRowDtos =null;
+            if (auditorium.Rows.Count > 0)
+            {
+                 listRowDtos = new List<RowDtos>();
+                auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
+            }
+         
+               
             return new AuditoriumDtos
             {
                 Id = auditorium.Id,
                 Name = auditorium.Name,
-                Capacity = auditorium.Capacity
+                Capacity = auditorium.Capacity,
+                Rows = listRowDtos 
+            };
+        }
+
+        public static RowWithAuditoriumDtos AsToRowWithAuditoriumDtos(this Row row)
+        {
+
+            return new RowWithAuditoriumDtos
+            {
+                Id = row.Id,
+                Number = row.Number,
+                AuditoriumId =row.AuditoriumId,
+                Auditorium =row.Auditorium.AsToAuditoriumDtos()
             };
         }
 
@@ -68,7 +88,8 @@ namespace Utilities.Extension
             {
                 Id = row.Id,
                 Number = row.Number,
-                AuditoriumId =row.AuditoriumId
+                AuditoriumId = row.AuditoriumId
+          
             };
         }
 
@@ -83,7 +104,7 @@ namespace Utilities.Extension
                 {
                     item.Rows.ToList().ForEach(x => rows.Add(x.AsToRowDtos()));
                 }
-
+                rows.Sort((a, b) => a.Number - b.Number);
                 var auditorium = new AuditoriumDtos
                 {
                     Id = item.Id,
@@ -96,6 +117,34 @@ namespace Utilities.Extension
             return viewListAuditoriumDtos;
 
 
+        }
+
+        public static IEnumerable<RowWithAuditoriumDtos> AsToRowsDtosList(this IEnumerable<Row> rows)
+        {
+            var listRowDtos = new List<RowWithAuditoriumDtos>();
+            foreach (var item in rows)
+            {
+               
+                var row = new RowWithAuditoriumDtos
+                {
+                    Id = item.Id,
+                    Number = item.Number,
+                    AuditoriumId = item.AuditoriumId,
+                    Auditorium = new AuditoriumDtos
+                    {
+                        Id = item.Auditorium.Id,
+                        Name = item.Auditorium.Name,
+                        Capacity = item.Auditorium.Capacity,
+
+                    }
+                };
+              
+
+                listRowDtos.Add(row);
+            }
+            listRowDtos.OrderBy(x => x.Id);
+
+            return listRowDtos;
         }
     }
 }
