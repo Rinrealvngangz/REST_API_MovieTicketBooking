@@ -34,6 +34,10 @@ namespace Core.UnitOfWork
 
         public IRowRepository Row { get; private set; }
 
+        public ISeatRepository Seat { get; private set; }
+
+        public ISeatTypeRepository SeatType { get; private set; }
+
         public UnitOfWork(UserManager<User> userManager,
                           RoleManager<Role> roleManager,
                           IEmailService emailService,
@@ -54,6 +58,8 @@ namespace Core.UnitOfWork
             UserRole = new UserRoleRepository(_userManager, _roleManager);
             Auditorium = new AuditoriumRepository(_appDbContext);
             Row = new RowRepository(_appDbContext);
+            Seat = new SeatRepository(_appDbContext);
+            SeatType = new SeatTypeRepository(_appDbContext);
         }
        
 

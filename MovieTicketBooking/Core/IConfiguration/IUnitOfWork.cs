@@ -19,6 +19,10 @@ namespace Core.IConfiguration
         IAuditoriumRepository Auditorium { get; }
 
         IRowRepository Row { get; }
+
+        ISeatRepository Seat { get; }
+
+        ISeatTypeRepository SeatType { get; }
         Task CompleteAsync();
     }
 }
