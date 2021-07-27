@@ -9,6 +9,7 @@ namespace Dtos
 {
    public class SeatDtos
     {
+        public Guid Id { get; set; }
         [Required]
         public Guid RowId { get; init; }
 

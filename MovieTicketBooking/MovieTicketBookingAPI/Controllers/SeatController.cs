@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MovieTicketBookingAPI.Data.Entities;
+using Utilities.Extension;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -20,8 +21,15 @@ namespace MovieTicketBookingAPI.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+          var item = await _unitOfWork.Seat.GetByIdAsync(Guid.Parse(id));
+            if(item is null) return NotFound();
+            return Ok(item.AsToSeatDtos());
+        }  
 
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody]SeatDtos seatDtos)
         {
             if (!ModelState.IsValid) return BadRequest();
@@ -29,12 +37,13 @@ namespace MovieTicketBookingAPI.Controllers
                Id =new Guid(),
                Number =seatDtos.Number,
                Name = seatDtos.Name,
-               RowId =seatDtos.RowId
+               RowId =seatDtos.RowId,
+               SeatTypeId =seatDtos.SeatTypeId
             };
 
           var item =  await _unitOfWork.Seat.AddAsync(Seat);
             await _unitOfWork.CompleteAsync();
-            return Ok(item);
+            return CreatedAtAction(nameof(Get),new{ id = item.Id},item.AsToSeatDtos());
         }
 
         [HttpPut("{id}")]
@@ -46,7 +55,8 @@ namespace MovieTicketBookingAPI.Controllers
             {
                 Number = seatDtos.Number,
                 Name = seatDtos.Name,
-                RowId = seatDtos.RowId
+                RowId = seatDtos.RowId,
+                SeatTypeId = seatDtos.SeatTypeId
             };
 
            var result = await _unitOfWork.Seat.UpdateAsync(id,Seat);
@@ -67,6 +77,8 @@ namespace MovieTicketBookingAPI.Controllers
 
             return BadRequest();
         }
+
+
 
     }
 }

@@ -10,19 +10,19 @@ namespace MovieTicketBookingAPI.Data.Entities
     {
         public Guid Id { get; init; }
 
-        public Guid RowId { get; init; }
+        public Guid RowId { get; set; }
 
-        public Guid SeatTypeId { get; init; }
+        public Guid SeatTypeId { get; set; }
 
-        public int Number { get; init; }
+        public int Number { get; set; }
 
-        public string Name { get; init; }
+        public string Name { get; set; }
 
-        public Row Row { get; init; }
+        public Row Row { get; set; }
 
-        public SeatType SeatType { get; init; }
+        public SeatType SeatType { get; set; }
 
-        public ICollection<Reservation> Reservations { get; init; }
+        public ICollection<Reservation> Reservations { get; set; }
 
     }
 }

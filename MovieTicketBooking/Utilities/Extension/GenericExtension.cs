@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 namespace Utilities.Extension
 {
-   public static class GenericExtension
+    public static class GenericExtension
     {
         public static UserDtos AsToUserDtos(this User user)
         {
             return new UserDtos
             {
                 Id = user.Id,
-                UserName =user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 IsVip = user.IsVip
             };
         }
-        public async static Task<List<UserDtos>> AsToListUserDtos (this Task<IEnumerable<User>> users)
+        public async static Task<List<UserDtos>> AsToListUserDtos(this Task<IEnumerable<User>> users)
         {
-              List<UserDtos> userDtos = new List<UserDtos>();
-                   var listUsers =  await users;
-              listUsers.ToList().ForEach(x => userDtos.Add(x.AsToUserDtos()));
+            List<UserDtos> userDtos = new List<UserDtos>();
+            var listUsers = await users;
+            listUsers.ToList().ForEach(x => userDtos.Add(x.AsToUserDtos()));
             return userDtos;
-               
+
         }
 
-        public static RoleDtos AsToRoleDtos (this Role role)
+        public static RoleDtos AsToRoleDtos(this Role role)
         {
             return new RoleDtos
             {
@@ -52,20 +52,20 @@ namespace Utilities.Extension
 
         public static AuditoriumDtos AsToAuditoriumDtos(this Auditorium auditorium)
         {
-            List<RowDtos> listRowDtos =null;
+            List<RowDtos> listRowDtos = null;
             if (auditorium.Rows.Count > 0)
             {
-                 listRowDtos = new List<RowDtos>();
+                listRowDtos = new List<RowDtos>();
                 auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
             }
-         
-               
+
+
             return new AuditoriumDtos
             {
                 Id = auditorium.Id,
                 Name = auditorium.Name,
                 Capacity = auditorium.Capacity,
-                Rows = listRowDtos 
+                Rows = listRowDtos
             };
         }
 
@@ -76,8 +76,8 @@ namespace Utilities.Extension
             {
                 Id = row.Id,
                 Number = row.Number,
-                AuditoriumId =row.AuditoriumId,
-                Auditorium =row.Auditorium.AsToAuditoriumDtos()
+                AuditoriumId = row.AuditoriumId,
+                Auditorium = row.Auditorium.AsToAuditoriumDtos()
             };
         }
 
@@ -89,18 +89,18 @@ namespace Utilities.Extension
                 Id = row.Id,
                 Number = row.Number,
                 AuditoriumId = row.AuditoriumId
-          
+
             };
         }
 
         public static IEnumerable<AuditoriumDtos> AsToAuditoriumViewDtos(this IEnumerable<Auditorium> ListAuditorium)
         {
-       
+
             var viewListAuditoriumDtos = new List<AuditoriumDtos>();
             foreach (var item in ListAuditorium)
             {
                 var rows = new List<RowDtos>();
-               if(item.Rows.Count >0 )
+                if (item.Rows.Count > 0)
                 {
                     item.Rows.ToList().ForEach(x => rows.Add(x.AsToRowDtos()));
                 }
@@ -124,7 +124,7 @@ namespace Utilities.Extension
             var listRowDtos = new List<RowWithAuditoriumDtos>();
             foreach (var item in rows)
             {
-               
+
                 var row = new RowWithAuditoriumDtos
                 {
                     Id = item.Id,
@@ -138,13 +138,55 @@ namespace Utilities.Extension
 
                     }
                 };
-              
+
 
                 listRowDtos.Add(row);
             }
             listRowDtos.OrderBy(x => x.Id);
 
             return listRowDtos;
+        }
+        public static SeatDtos AsToSeatDtos(this Seat seat)
+        {
+            return new SeatDtos
+            {
+                Id = seat.Id,
+                Name = seat.Name,
+                Number = seat.Number,
+                SeatTypeId = seat.SeatTypeId,
+                RowId = seat.RowId,
+
+            };
+        }
+        public static SeatTypeDtos AsToSeatTypeDtos(this SeatType seatTypes)
+        {
+            List<SeatDtos> seatDtos = new List<SeatDtos>();
+            if(seatTypes.Seats.Count > 0)
+            {
+                foreach (var seat in seatTypes.Seats)
+                {
+                    seatDtos.Add(seat.AsToSeatDtos());
+                }
+            }
+           
+
+            return new SeatTypeDtos
+            {
+                Id = seatTypes.Id,
+                Name = seatTypes.Name,
+                Seats = seatDtos
+            };
+        }
+
+        public static IEnumerable<SeatTypeDtos> AsToSeatTypeDtosList(this IEnumerable<SeatType> seatTypes)
+        {
+            List<SeatTypeDtos> seatTypeDtos = new List<SeatTypeDtos>();
+            foreach (var seat in seatTypes)
+            {
+                seatTypeDtos.Add(seat.AsToSeatTypeDtos());
+            }
+
+            return seatTypeDtos;
         }
     }
 }
