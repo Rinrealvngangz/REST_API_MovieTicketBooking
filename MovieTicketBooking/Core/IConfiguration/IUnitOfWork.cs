@@ -23,6 +23,8 @@ namespace Core.IConfiguration
         ISeatRepository Seat { get; }
 
         ISeatTypeRepository SeatType { get; }
+
+        IReservationRepository Reservation{ get; }
         Task CompleteAsync();
     }
 }

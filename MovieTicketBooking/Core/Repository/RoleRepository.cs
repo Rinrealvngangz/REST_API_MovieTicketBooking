@@ -1,5 +1,7 @@
 ﻿using Core.IRepository;
+using Dtos;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MovieTicketBookingAPI.Data;
 using MovieTicketBookingAPI.Data.Entities;
 using System;
@@ -62,5 +64,6 @@ namespace Core.Repository
             return false;
         }
 
+    
     }
 }

@@ -38,6 +38,8 @@ namespace Core.UnitOfWork
 
         public ISeatTypeRepository SeatType { get; private set; }
 
+        public IReservationRepository Reservation { get; private set;  }
+
         public UnitOfWork(UserManager<User> userManager,
                           RoleManager<Role> roleManager,
                           IEmailService emailService,
@@ -52,7 +54,7 @@ namespace Core.UnitOfWork
             _appDbContext = appDbContext;
             _optionsMonitor = optionsMonitor;
             _tokenValidationParameters = tokenValidationParameters;
-            User = new UserRepository(_appDbContext, _userManager, _emailService);
+            User = new UserRepository(_appDbContext, _userManager, _roleManager, _emailService);
             Authen = new AuthenRepository(_appDbContext, _optionsMonitor, _userManager, _tokenValidationParameters);
             Role = new RoleRepository(_roleManager,_appDbContext,_userManager);
             UserRole = new UserRoleRepository(_userManager, _roleManager);
@@ -60,6 +62,7 @@ namespace Core.UnitOfWork
             Row = new RowRepository(_appDbContext);
             Seat = new SeatRepository(_appDbContext);
             SeatType = new SeatTypeRepository(_appDbContext);
+            Reservation = new ReservationRepository(_appDbContext);
         }
        
 

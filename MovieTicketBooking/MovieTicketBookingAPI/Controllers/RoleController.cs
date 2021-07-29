@@ -13,7 +13,7 @@ namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = CustomeRoles.Administrator)]
+   //[Authorize(Roles = CustomeRoles.Administrator)]
     public class RoleController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

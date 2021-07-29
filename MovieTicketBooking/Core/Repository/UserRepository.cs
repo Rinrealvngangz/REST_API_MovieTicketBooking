@@ -17,14 +17,17 @@ namespace Core.Repository
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IEmailService _emailService;
-
+       
         public UserRepository(AppDbContext appDbContext,
                               UserManager<User> userManager,
+                             RoleManager<Role> roleManager,
                               IEmailService emailService) : base(appDbContext)
         {
             _userManager = userManager;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public  async Task<IEnumerable<UserDtos>> GetAllUserRoleAsync()
@@ -167,6 +170,21 @@ namespace Core.Repository
             throw new MovieTicketBookingExceptions("Email is not exist");
         }
 
-      
+        public async Task<VerifyEmailDtos> RegisterCustomer(UserDtos user)
+        {
+          var verifyCustomer =  await Register(user);
+            if (verifyCustomer == null) throw new MovieTicketBookingExceptions("Error register fail");
+
+           var existCustomer = await GetByIdAsync(verifyCustomer.UserId);
+
+            if (existCustomer == null) throw new MovieTicketBookingExceptions("Cannot find customer");  
+            
+           var role = await _roleManager.FindByNameAsync("customer");
+
+            if (role == null) throw new MovieTicketBookingExceptions("role customer not exist");
+
+           await _userManager.AddToRoleAsync(existCustomer,role.Name);
+            return verifyCustomer;
+        }   
     }
 }

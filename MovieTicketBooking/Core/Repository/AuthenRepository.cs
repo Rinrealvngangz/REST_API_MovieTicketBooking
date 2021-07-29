@@ -58,7 +58,7 @@ namespace Core.Repository
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = ClaimIdentity,
-                Expires = DateTime.UtcNow.AddSeconds(30),
+                Expires = DateTime.UtcNow.AddSeconds(300),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)), SecurityAlgorithms.HmacSha256)
             };
 
