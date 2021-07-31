@@ -25,6 +25,8 @@ namespace Core.IConfiguration
         ISeatTypeRepository SeatType { get; }
 
         IReservationRepository Reservation{ get; }
+
+        IMovieRepository MovieRepository { get; }
         Task CompleteAsync();
     }
 }

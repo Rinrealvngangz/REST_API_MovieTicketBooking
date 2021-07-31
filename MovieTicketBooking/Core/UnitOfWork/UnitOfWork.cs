@@ -40,6 +40,8 @@ namespace Core.UnitOfWork
 
         public IReservationRepository Reservation { get; private set;  }
 
+        public IMovieRepository MovieRepository { get; private set; }
+
         public UnitOfWork(UserManager<User> userManager,
                           RoleManager<Role> roleManager,
                           IEmailService emailService,
@@ -63,6 +65,7 @@ namespace Core.UnitOfWork
             Seat = new SeatRepository(_appDbContext);
             SeatType = new SeatTypeRepository(_appDbContext);
             Reservation = new ReservationRepository(_appDbContext);
+           MovieRepository =new MovieRepository(_appDbContext);
         }
        
 
