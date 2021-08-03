@@ -68,7 +68,7 @@ namespace Core.UnitOfWork
             SeatType = new SeatTypeRepository(_appDbContext);
             Reservation = new ReservationRepository(_appDbContext);
            MovieRepository =new MovieRepository(_appDbContext);
-            ScheduleMovie = new ScheduleMovieRepository(_appDbContext);
+            ScheduleMovie = new ScheduleMovieRepository(_appDbContext, MovieRepository);
         }
        
 
