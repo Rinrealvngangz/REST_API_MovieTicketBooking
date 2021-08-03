@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MovieTicketBookingAPI.Data.Entities;
 namespace Core.IRepository
 {
-    interface IScheduleMovieRepository : IGenericRepository<ScheduledMovie>
+  public  interface IScheduleMovieRepository : IGenericRepository<ScheduledMovie>
     {
 
     }  

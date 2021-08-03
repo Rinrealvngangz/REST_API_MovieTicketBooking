@@ -28,16 +28,18 @@ namespace Core.Repository
 
         public override async Task<bool> UpdateAsync(string id, Movie item)
         {
-           var existMovie = await _dbSet.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+           var existMovie = await _dbSet.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id) );
            if (existMovie is null)  throw new MovieTicketBookingExceptions("Is not exist Movie");
-            var isUpdate = item with
-            {
-                Name = item.Name,
-                Description = item.Description,
-                Minutes = item.Minutes,
-                PublishedYear = item.PublishedYear
-            };
-             _dbSet.Update(isUpdate);
+
+            var existMovieName = await _dbSet.FirstOrDefaultAsync(x => x.Id != Guid.Parse(id) && x.Name == item.Name);
+            if (existMovieName is not null) throw new MovieTicketBookingExceptions("Name movie is exist");
+
+            existMovie.Name = item.Name;
+            existMovie.Description = item.Description;
+            existMovie.Minutes = item.Minutes;
+            existMovie.PublishedYear = item.PublishedYear;
+            
+            _dbSet.Update(existMovie);
             return true;  
         }
 
@@ -56,7 +58,7 @@ namespace Core.Repository
         public override async Task<Movie> GetByIdAsync(Guid id)
         {
             var existMovie = await _dbContext.Movies.AsTracking()
-                                                    .Include(x => x.ScheduledMovies).FirstOrDefaultAsync();
+                                                    .Include(x => x.ScheduledMovies).FirstOrDefaultAsync(x => x.Id == id);
             if (existMovie is null) throw new MovieTicketBookingExceptions("Movie is not exist");                                   
              return existMovie;
         }

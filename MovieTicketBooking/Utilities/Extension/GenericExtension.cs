@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+
 namespace Utilities.Extension
 {
     public static class GenericExtension
@@ -187,6 +189,37 @@ namespace Utilities.Extension
             }
 
             return seatTypeDtos;
+        }
+
+        public static MovieDtos AsToMovieDtos (this Movie movie)
+        {
+            var timeMovie = $"{movie.Minutes.Hours}:{movie.Minutes.Minutes}:{movie.Minutes.Seconds}";
+            return new MovieDtos
+            {
+                Id = movie.Id.ToString(),
+                Name = movie.Name,
+                time = timeMovie,
+                Description = movie.Description,
+                PublishedYear = movie.PublishedYear.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)
+            };
+        }
+
+        public static IEnumerable<MovieDtos> AsToMovieDtosList(this IEnumerable<Movie> movie)
+        {
+            List<MovieDtos> movieDtosList = new List<MovieDtos>();
+            foreach (var item in movie)
+            {
+                var timeMovie = $"{item.Minutes.Hours}:{item.Minutes.Minutes}:{item.Minutes.Seconds}";
+                movieDtosList.Add(new MovieDtos
+                {
+                    Id = item.Id.ToString(),
+                    Name = item.Name,
+                    time = timeMovie,
+                    Description = item.Description,
+                    PublishedYear = item.PublishedYear.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)
+                });
+            }
+            return movieDtosList;
         }
     }
 }

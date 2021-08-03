@@ -27,6 +27,8 @@ namespace Core.IConfiguration
         IReservationRepository Reservation{ get; }
 
         IMovieRepository MovieRepository { get; }
+
+        IScheduleMovieRepository ScheduleMovie { get; }
         Task CompleteAsync();
     }
 }

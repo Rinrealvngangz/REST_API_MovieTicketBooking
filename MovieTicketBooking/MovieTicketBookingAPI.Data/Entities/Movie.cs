@@ -7,12 +7,13 @@ namespace MovieTicketBookingAPI.Data.Entities
     {
         public Guid Id { get; init; }
 
-        public string Name { get; init; }
+        public string Name { get; set; }
 
-        public TimeSpan Minutes { get; init; }
-        public string Description { get; init; }
+        public  TimeSpan Minutes { get; set; }
 
-        public DateTime PublishedYear { get; init; }
+        public string Description { get; set; }
+
+        public DateTime PublishedYear { get; set; }
 
         public ICollection<ScheduledMovie> ScheduledMovies { get; init; }
     }

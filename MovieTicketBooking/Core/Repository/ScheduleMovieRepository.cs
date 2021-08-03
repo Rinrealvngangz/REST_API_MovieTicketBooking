@@ -17,11 +17,17 @@ namespace Core.Repository
 
         }
 
-        //public override async Task<ScheduledMovie> AddAsync(ScheduledMovie item)
-        //{
-        //   var existSchedule = await _dbSet.FirstOrDefaultAsync(x => x.Id == item.Id);        
-        //     await _dbSet.AddAsync(item);
-        //}
+        public override async Task<ScheduledMovie> AddAsync(ScheduledMovie item)
+        {
+            var existSchedule = await _dbSet.FirstOrDefaultAsync(x => x.Id == item.Id);
+            if (existSchedule is null) throw new MovieTicketBookingExceptions("exist schedule movie");
+            var existTimeStart = await _dbSet.FirstOrDefaultAsync(x => x.Start == item.Start && x.MovieId == item.MovieId);
+            if (existTimeStart is not null) throw new MovieTicketBookingExceptions("Start time schedule is exist");
+            await _dbSet.AddAsync(item);
+            return item;
+        }
+
+
 
 
     }
