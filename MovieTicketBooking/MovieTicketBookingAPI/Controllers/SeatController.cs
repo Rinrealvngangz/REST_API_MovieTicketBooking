@@ -26,9 +26,17 @@ namespace MovieTicketBookingAPI.Controllers
         {
           var item = await _unitOfWork.Seat.GetByIdAsync(Guid.Parse(id));
             if(item is null) return NotFound();
-            return Ok(item.AsToSeatDtos());
-        }  
+            return Ok(item.AsToSeatViewDtos());
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var items = await _unitOfWork.Seat.GetAllAsync();
+            if (items is null) return NotFound();
+            return Ok(items.AsToSeatListDtos());
+
+        }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]SeatDtos seatDtos)
         {

@@ -63,7 +63,11 @@ namespace Core.Repository
             var items = await _dbContext.Auditoriums.Include(x => x.Rows).ToListAsync();
                 return items;
         }
-
+        public override async Task<Auditorium> GetByIdAsync(Guid id)
+        {
+            var item = await _dbContext.Auditoriums.Include(x => x.Rows).FirstOrDefaultAsync(x => x.Id == id);
+            return item;
+        }
 
 
 

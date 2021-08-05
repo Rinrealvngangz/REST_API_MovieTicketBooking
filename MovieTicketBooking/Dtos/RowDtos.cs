@@ -17,6 +17,7 @@ namespace Dtos
         [Required]
         public Guid AuditoriumId { get; init; }
 
+        public IEnumerable<SeatViewDtos> Seats { get; init;}
        
     }
 }

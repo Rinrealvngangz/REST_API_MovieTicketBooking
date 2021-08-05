@@ -45,7 +45,7 @@ namespace Core.Repository
             if (exitsSeat == null) throw new MovieTicketBookingExceptions("Seat not exist");
 
            var exitsRow =  await _dbContext.Rows.FindAsync(exitsSeat.RowId);
-            if (exitsRow == null) throw new MovieTicketBookingExceptions("Row is nor exist");
+            if (exitsRow == null) throw new MovieTicketBookingExceptions("Row is not exist");
            
             var checkSeat = _dbSet.FirstOrDefault(x => x.Number == item.Number && x.Name == item.Name && x.RowId == item.RowId && x.SeatTypeId == item.SeatTypeId
                                                    || x.RowId == item.RowId && x.Name == item.Name && x.SeatTypeId ==item.SeatTypeId
@@ -71,6 +71,24 @@ namespace Core.Repository
             throw new MovieTicketBookingExceptions("Cannot delete because row exist contain seat");
             
         }
+
+        public override async Task<Seat> GetByIdAsync(Guid id)
+        {
+            var item = await _dbContext.Seats.AsTracking().Include(x => x.Row).Include(x => x.SeatType)
+                            .FirstOrDefaultAsync(x => x.Id == id);
+            if (item == null) throw new MovieTicketBookingExceptions("item is not exist");
+            return item;
+        }
+
+        public override async Task<IEnumerable<Seat>> GetAllAsync()
+        {
+            var items = await _dbContext.Seats.AsTracking().Include(x => x.Row)
+                                              .Include(x => x.SeatType).ToListAsync();
+                            
+            if (items == null) throw new MovieTicketBookingExceptions("items is not exist");
+            return items;
+        }
+
 
     }
 }

@@ -61,6 +61,7 @@ namespace Core.Repository
            var rows = await _dbContext.Rows.AsTracking().ToListAsync();
             foreach(var item in rows)
             {
+                await _dbContext.Entry(item).Collection(x => x.Seats).LoadAsync();
                await _dbContext.Entry(item).Reference(x => x.Auditorium).LoadAsync();
             }
             return rows;
@@ -70,8 +71,10 @@ namespace Core.Repository
         {
            var item = await _dbContext.Rows.AsTracking()
                                            .Where(x => x.Id == id)
+                                           .Include(x => x.Seats).ThenInclude(x => x.SeatType)
                                            .Include(x => x.Auditorium)
-                                           .ThenInclude(x => x.Rows).FirstOrDefaultAsync();
+                                           .ThenInclude(x => x.Rows)
+                                           .FirstOrDefaultAsync();
             return item;
         }
 

@@ -12,21 +12,21 @@ namespace MovieTicketBookingAPI.Data.Entities
      
         public Guid Id { get; init; }
 
-        public DateTime Start { get; init; }
+        public DateTime Start { get; set; }
 
         public DateTime End { get; set; }
 
-        public Decimal Price { get; init;}
+        public Decimal Price { get; set;}
 
         [System.Text.Json.Serialization.JsonIgnore]
         public Auditorium Auditorium { get; init; }
 
-        public Guid AuthoriumId { get; init; }
+        public Guid AuthoriumId { get; set; }
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public Movie Movie { get; init; }
+        public Movie Movie { get; set; }
 
-        public Guid MovieId { get; init; }
+        public Guid MovieId { get; set; }
 
        [System.Text.Json.Serialization.JsonIgnore]
         public ICollection<Reservation> Reservations { get; init; }

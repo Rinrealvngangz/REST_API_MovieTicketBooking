@@ -55,13 +55,14 @@ namespace Utilities.Extension
         public static AuditoriumDtos AsToAuditoriumDtos(this Auditorium auditorium)
         {
             List<RowDtos> listRowDtos = null;
-            if (auditorium.Rows.Count > 0)
-            {
-                listRowDtos = new List<RowDtos>();
-                auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
-            }
+          
+                if (auditorium.Rows.Count > 0)
+                {
+                    listRowDtos = new List<RowDtos>();
+                    auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
+                }
 
-
+        
             return new AuditoriumDtos
             {
                 Id = auditorium.Id,
@@ -79,7 +80,8 @@ namespace Utilities.Extension
                 Id = row.Id,
                 Number = row.Number,
                 AuditoriumId = row.AuditoriumId,
-                Auditorium = row.Auditorium.AsToAuditoriumDtos()
+                Auditorium = row.Auditorium.AsToAuditoriumDtos(),
+              Seats =row.Seats.AsToSeatListDtos()
             };
         }
 
@@ -90,8 +92,8 @@ namespace Utilities.Extension
             {
                 Id = row.Id,
                 Number = row.Number,
-                AuditoriumId = row.AuditoriumId
-
+                AuditoriumId = row.AuditoriumId,
+                Seats = row.Seats != null || row.Seats.Count>0  ? row.Seats.AsToSeatListDtos() : null
             };
         }
 
@@ -138,7 +140,9 @@ namespace Utilities.Extension
                         Name = item.Auditorium.Name,
                         Capacity = item.Auditorium.Capacity,
 
-                    }
+                    },
+                    Seats = item.Seats.AsToSeatListDtos()
+
                 };
 
 
@@ -160,10 +164,36 @@ namespace Utilities.Extension
 
             };
         }
+        public static IEnumerable<SeatViewDtos> AsToSeatListDtos(this IEnumerable<Seat> seats)
+        {
+            List<SeatViewDtos> listSeat = new List<SeatViewDtos>();
+            
+            foreach (var item in seats)
+            {
+                listSeat.Add(item.AsToSeatViewDtos());
+            }
+            return listSeat;
+        }
+
+       
+
+        public static SeatViewDtos AsToSeatViewDtos(this Seat seat)
+        {
+            return new SeatViewDtos
+            {
+                Id = seat.Id,
+                Name = seat.Name,
+                Number = seat.Number,
+             //   Row = seat.Row != null ? seat.Row.AsToRowDtos() :null,
+                SeatType = seat.SeatType != null ? seat.SeatType.AsToSeatTypeDtos() :null
+
+            };
+        }
+      
         public static SeatTypeDtos AsToSeatTypeDtos(this SeatType seatTypes)
         {
             List<SeatDtos> seatDtos = new List<SeatDtos>();
-            if(seatTypes.Seats.Count > 0)
+            if(seatTypes.Seats.Count > 0 || seatTypes.Seats != null)
             {
                 foreach (var seat in seatTypes.Seats)
                 {
@@ -221,5 +251,28 @@ namespace Utilities.Extension
             }
             return movieDtosList;
         }
+
+        public static ScheduleViewDtos AsToScheduleMovieViews(this ScheduledMovie scheduledMovie)
+        {
+            return new ScheduleViewDtos
+            {
+                Start = scheduledMovie.Start,
+                End = scheduledMovie.End,
+                Price = scheduledMovie.Price,
+                Movie = scheduledMovie.Movie.AsToMovieDtos(),
+                Auditorium = scheduledMovie.Auditorium.AsToAuditoriumDtos()
+            };
+        }
+
+        public static IEnumerable<ScheduleViewDtos> AsToScheduleMovieViewsList(this IEnumerable<ScheduledMovie> scheduledMovie)
+        {
+            List<ScheduleViewDtos> scheduledMovies = new List<ScheduleViewDtos>();
+            foreach(var item in scheduledMovie)
+            {
+                scheduledMovies.Add(item.AsToScheduleMovieViews());
+            }
+            return scheduledMovies;
+        }
+
     }
 }
