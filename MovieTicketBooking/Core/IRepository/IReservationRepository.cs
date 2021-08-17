@@ -9,6 +9,6 @@ namespace Core.IRepository
 {
    public interface IReservationRepository : IGenericRepository<Reservation>
     {
-
+        string GetIdUserClaim(string token);
     }
 }

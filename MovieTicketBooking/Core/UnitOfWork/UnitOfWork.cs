@@ -66,7 +66,7 @@ namespace Core.UnitOfWork
             Row = new RowRepository(_appDbContext);
             Seat = new SeatRepository(_appDbContext);
             SeatType = new SeatTypeRepository(_appDbContext);
-            Reservation = new ReservationRepository(_appDbContext);
+            Reservation = new ReservationRepository(_appDbContext, _tokenValidationParameters);
            MovieRepository =new MovieRepository(_appDbContext);
             ScheduleMovie = new ScheduleMovieRepository(_appDbContext, MovieRepository);
         }

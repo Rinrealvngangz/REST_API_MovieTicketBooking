@@ -256,6 +256,7 @@ namespace Utilities.Extension
         {
             return new ScheduleViewDtos
             {
+                Id =scheduledMovie.Id,
                 Start = scheduledMovie.Start,
                 End = scheduledMovie.End,
                 Price = scheduledMovie.Price,

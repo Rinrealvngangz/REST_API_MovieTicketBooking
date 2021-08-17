@@ -9,6 +9,7 @@ namespace Dtos
 {
    public class ScheduleMovieDtos
     {
+    
         [Required]
         public DateTime Start { get; init; }
 

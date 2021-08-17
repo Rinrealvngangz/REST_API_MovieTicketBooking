@@ -10,6 +10,8 @@ namespace Dtos
    public class ScheduleViewDtos
     {
       
+        public Guid Id { get; set; }
+
         public DateTime Start { get; init; }
 
        
