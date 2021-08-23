@@ -38,6 +38,37 @@ namespace MovieTicketBookingAPI.Controllers
                 if (item == null) return BadRequest();
                 return Ok(item);
             }
+
+            [HttpPut("{id}")]
+           public async Task<IActionResult> Update(string id , [FromBody]ReservationDtos reservation)
+           {
+            string userId = _unitOfWork.Reservation.GetIdUserClaim(reservation.Token);
+
+            var item = new Reservation
+            {
+                UserId = Guid.Parse(userId),
+                SeatId = reservation.SeatId,
+                ScheduledMovieId = reservation.ScheduledMovieId
+            };
+           var result = await _unitOfWork.Reservation.UpdateAsync(id, item);
+            if (result)
+            {
+                await _unitOfWork.CompleteAsync();
+                return NoContent();
+            }
+            return BadRequest();
+
+            }
+          [HttpDelete("{id}")]
+          public async Task<IActionResult> Delete(string id)
+          {
+           var result = await _unitOfWork.Reservation.DeleteAsync(Guid.Parse(id));
+              await _unitOfWork.CompleteAsync();
+             if(!result) return BadRequest();
+            return NoContent();
+          }
+
         }
+
     }
 

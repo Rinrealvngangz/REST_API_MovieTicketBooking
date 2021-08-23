@@ -60,7 +60,9 @@ namespace Core.Repository
             //  await _dbContext.Entry(item).Collection(x => x.Rows).LoadAsync();
             //}
 
-            var items = await _dbContext.Auditoriums.Include(x => x.Rows).ToListAsync();
+            var items = await _dbContext.Auditoriums.AsTracking().Include(x => x.Rows)
+                                                        .ThenInclude(x => x.Seats)
+                                                        .ThenInclude(x => x.SeatType).ToListAsync();
                 return items;
         }
         public override async Task<Auditorium> GetByIdAsync(Guid id)
