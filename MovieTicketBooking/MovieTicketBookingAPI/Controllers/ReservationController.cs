@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Utilities.Extension;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -22,7 +23,23 @@ namespace MovieTicketBookingAPI.Controllers
                 _unitOfWork = unitOfWork;
             }
 
-            [HttpPost]
+           [HttpGet("{id}")]
+           public async Task<IActionResult> GetById(string id)
+           {
+             var reservation = await _unitOfWork.Reservation.GetByIdAsync(Guid.Parse(id));
+            if (reservation is null) return BadRequest();
+            return Ok(reservation.AsToViewReservation());
+           }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var reservations = await _unitOfWork.Reservation.GetAllAsync();
+            if (reservations is null) return BadRequest();
+            return Ok(reservations.AsToViewReservationList());
+        }
+
+        [HttpPost]
             public async Task<IActionResult> AddReservation([FromBody] ReservationDtos reservation)
             {
                 string userId = _unitOfWork.Reservation.GetIdUserClaim(reservation.Token);

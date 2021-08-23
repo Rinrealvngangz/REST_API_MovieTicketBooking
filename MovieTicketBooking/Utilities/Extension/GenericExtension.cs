@@ -55,14 +55,14 @@ namespace Utilities.Extension
         public static AuditoriumDtos AsToAuditoriumDtos(this Auditorium auditorium)
         {
             List<RowDtos> listRowDtos = null;
-          
-                if (auditorium.Rows.Count > 0)
-                {
-                    listRowDtos = new List<RowDtos>();
-                    auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
-                }
 
-        
+            if (auditorium.Rows.Count > 0)
+            {
+                listRowDtos = new List<RowDtos>();
+                auditorium.Rows.ToList().ForEach(x => listRowDtos.Add(x.AsToRowDtos()));
+            }
+
+
             return new AuditoriumDtos
             {
                 Id = auditorium.Id,
@@ -81,7 +81,7 @@ namespace Utilities.Extension
                 Number = row.Number,
                 AuditoriumId = row.AuditoriumId,
                 Auditorium = row.Auditorium.AsToAuditoriumDtos(),
-              Seats =row.Seats.AsToSeatListDtos()
+                Seats = row.Seats.AsToSeatListDtos()
             };
         }
 
@@ -93,7 +93,7 @@ namespace Utilities.Extension
                 Id = row.Id,
                 Number = row.Number,
                 AuditoriumId = row.AuditoriumId,
-                Seats = row.Seats != null || row.Seats.Count>0  ? row.Seats.AsToSeatListDtos() : null
+                Seats = row.Seats != null || row.Seats.Count > 0 ? row.Seats.AsToSeatListDtos() : null
             };
         }
 
@@ -167,7 +167,7 @@ namespace Utilities.Extension
         public static IEnumerable<SeatViewDtos> AsToSeatListDtos(this IEnumerable<Seat> seats)
         {
             List<SeatViewDtos> listSeat = new List<SeatViewDtos>();
-            
+
             foreach (var item in seats)
             {
                 listSeat.Add(item.AsToSeatViewDtos());
@@ -175,7 +175,7 @@ namespace Utilities.Extension
             return listSeat;
         }
 
-       
+
 
         public static SeatViewDtos AsToSeatViewDtos(this Seat seat)
         {
@@ -184,23 +184,23 @@ namespace Utilities.Extension
                 Id = seat.Id,
                 Name = seat.Name,
                 Number = seat.Number,
-             //   Row = seat.Row != null ? seat.Row.AsToRowDtos() :null,
-                SeatType = seat.SeatType != null ? seat.SeatType.AsToSeatTypeDtos() :null
+                //   Row = seat.Row != null ? seat.Row.AsToRowDtos() :null,
+                SeatType = seat.SeatType != null ? seat.SeatType.AsToSeatTypeDtos() : null
 
             };
         }
-      
+
         public static SeatTypeDtos AsToSeatTypeDtos(this SeatType seatTypes)
         {
             List<SeatDtos> seatDtos = new List<SeatDtos>();
-            if(seatTypes.Seats.Count > 0 || seatTypes.Seats != null)
+            if (seatTypes.Seats.Count > 0 || seatTypes.Seats != null)
             {
                 foreach (var seat in seatTypes.Seats)
                 {
                     seatDtos.Add(seat.AsToSeatDtos());
                 }
             }
-           
+
 
             return new SeatTypeDtos
             {
@@ -221,7 +221,7 @@ namespace Utilities.Extension
             return seatTypeDtos;
         }
 
-        public static MovieDtos AsToMovieDtos (this Movie movie)
+        public static MovieDtos AsToMovieDtos(this Movie movie)
         {
             var timeMovie = $"{movie.Minutes.Hours}:{movie.Minutes.Minutes}:{movie.Minutes.Seconds}";
             return new MovieDtos
@@ -256,7 +256,7 @@ namespace Utilities.Extension
         {
             return new ScheduleViewDtos
             {
-                Id =scheduledMovie.Id,
+                Id = scheduledMovie.Id,
                 Start = scheduledMovie.Start,
                 End = scheduledMovie.End,
                 Price = scheduledMovie.Price,
@@ -268,12 +268,75 @@ namespace Utilities.Extension
         public static IEnumerable<ScheduleViewDtos> AsToScheduleMovieViewsList(this IEnumerable<ScheduledMovie> scheduledMovie)
         {
             List<ScheduleViewDtos> scheduledMovies = new List<ScheduleViewDtos>();
-            foreach(var item in scheduledMovie)
+            foreach (var item in scheduledMovie)
             {
                 scheduledMovies.Add(item.AsToScheduleMovieViews());
             }
             return scheduledMovies;
         }
 
+        public static ReservationViewDtos AsToViewReservation(this Reservation reservation)
+        {
+            var reservationView = new ReservationViewDtos
+            {
+                Id = reservation.Id,
+                HasPaidTicket = reservation.HasPaidTicket,
+                Customer = new CustomerDtos
+                {
+                    Id = reservation.User.Id,
+                    Email = reservation.User.Email,
+                    FirstName = reservation.User.FirstName,
+                    LastName = reservation.User.LastName,
+                    IsVip = reservation.User.IsVip
+                },
+                Seat = new SeatViewDtos
+                {
+                    Id = reservation.Seat.Id,
+                    Name = reservation.Seat.Name,
+                    Number = reservation.Seat.Number,
+                    RowId = reservation.Seat.RowId,
+                    SeatTypeId = reservation.Seat.SeatTypeId,
+                    SeatType = new SeatTypeDtos
+                    {
+                        Id = reservation.Seat.SeatType.Id,
+                        Name = reservation.Seat.SeatType.Name
+                    },
+                    Row = new RowDtos
+                    {
+                        Id = reservation.Seat.Row.Id,
+                        Number = reservation.Seat.Row.Number,
+                        AuditoriumId = reservation.Seat.Row.AuditoriumId
+                    }
+
+                },
+                ScheduleMovie = new ScheduleViewReservationDtos
+                {
+                    Id = reservation.ScheduledMovie.Id,
+                    Start = reservation.ScheduledMovie.Start,
+                    End = reservation.ScheduledMovie.End,
+                    Price = reservation.ScheduledMovie.Price,
+                    Movie = new MovieDtos
+                    {
+                        Id = reservation.ScheduledMovie.Movie.Id.ToString(),
+                        Name = reservation.ScheduledMovie.Movie.Name,
+                        Description = reservation.ScheduledMovie.Movie.Description,
+                        time = reservation.ScheduledMovie.Movie.Minutes.ToString(),
+                        PublishedYear = reservation.ScheduledMovie.Movie.PublishedYear.ToString()
+                    }
+                }
+
+            };
+            return reservationView;
+        }
+
+        public static IEnumerable<ReservationViewDtos> AsToViewReservationList(this IEnumerable<Reservation> listReservations)
+        {
+            var reservations = new List<ReservationViewDtos>();
+            foreach (var item in listReservations)
+            {
+                reservations.Add(item.AsToViewReservation());
+            }
+            return reservations;
+        }
     }
 }

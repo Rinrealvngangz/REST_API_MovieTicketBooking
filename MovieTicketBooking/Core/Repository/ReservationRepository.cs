@@ -125,9 +125,43 @@ namespace Core.Repository
         public async override Task<bool> DeleteAsync(Guid id)
         {
             var existItem = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
-            if (existItem == null) throw new MovieTicketBookingExceptions("not exist item");
+            if (existItem == null) throw new MovieTicketBookingExceptions("Not exist item");
              _dbSet.Remove(existItem);
             return true;
+        }
+
+        public async override Task<Reservation> GetByIdAsync(Guid id)
+        {
+            var existItem = await _dbSet.AsTracking().Include(x => x.ScheduledMovie).ThenInclude(x => x.Movie)
+                                                     .Include(x => x.Seat).ThenInclude(x => x.SeatType)
+                                                     .Include(x => x.User)
+                                                     .FirstOrDefaultAsync(x => x.Id == id);
+            await _dbContext.Entry(existItem.Seat).Reference(x => x.Row).LoadAsync();
+            await _dbContext.Entry(existItem.Seat.Row).Reference(x => x.Auditorium).LoadAsync();
+
+            if (existItem == null) throw new MovieTicketBookingExceptions("Not exist item");
+
+            return existItem;
+             
+        }
+
+        public override async Task<IEnumerable<Reservation>> GetAllAsync()
+        {
+            var existItems = await _dbSet.AsTracking().Include(x => x.ScheduledMovie).ThenInclude(x => x.Movie)
+                                                       .Include(x => x.Seat).ThenInclude(x => x.SeatType)
+                                                       .Include(x => x.User)
+                                                        .ToListAsync();
+            foreach(var item in existItems)
+            {
+                await _dbContext.Entry(item.Seat).Reference(x => x.Row).LoadAsync();
+                await _dbContext.Entry(item.Seat.Row).Reference(x => x.Auditorium).LoadAsync();
+            }
+           
+
+            if (existItems == null) throw new MovieTicketBookingExceptions("Not exist item");
+
+            return existItems;
+
         }
     }
 }
