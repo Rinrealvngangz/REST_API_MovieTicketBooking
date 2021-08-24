@@ -64,9 +64,15 @@ namespace MovieTicketBookingAPI.Controllers
         {
            var items = await _unitOfWork.MovieRepository.GetAllAsync();
            if(items == null) return BadRequest();
-         
-           return Ok(items.Filter(movieParameters.MinDate, movieParameters.MaxDate)
-                     .Search(movieParameters.Search).AsToMovieDtosList().Shaper(movieParameters.Fields));
+
+            return Ok(items.Filter(movieParameters.MinDate, movieParameters.MaxDate)
+                           .Sort(movieParameters.Sort)
+                           .Search(movieParameters.Search)
+                           .AsToMovieDtosList()
+                           .Shaper(movieParameters.Fields)
+                           );
+
+
         }
 
         [HttpPut("{id}")]
