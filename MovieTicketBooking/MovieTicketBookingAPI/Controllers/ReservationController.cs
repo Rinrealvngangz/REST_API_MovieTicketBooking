@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Utilities.Extension;
+using Utilities.Extension.DataShaping;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -32,11 +33,11 @@ namespace MovieTicketBookingAPI.Controllers
            }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string fields =null)
         {
             var reservations = await _unitOfWork.Reservation.GetAllAsync();
             if (reservations is null) return BadRequest();
-            return Ok(reservations.AsToViewReservationList());
+            return Ok(reservations.AsToViewReservationList().Shaper(fields));
         }
 
         [HttpPost]

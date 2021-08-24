@@ -14,7 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Core.Repository
 {
-    public class ReservationRepository : GenericRepository<Reservation>, IReservationRepository
+    public class ReservationRepository :  GenericRepository<Reservation>, IReservationRepository
     {
         private readonly TokenValidationParameters _tokenValidationParameters;
 

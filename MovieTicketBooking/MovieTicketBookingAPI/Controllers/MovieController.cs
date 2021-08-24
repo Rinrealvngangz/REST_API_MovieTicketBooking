@@ -10,7 +10,8 @@ using Dtos;
 using System.Globalization;
 using Utilities.Extension;
 using System.Security.Policy;
-
+using Utilities.Extension.DataShaping;
+using Dtos.Request;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -59,11 +60,13 @@ namespace MovieTicketBookingAPI.Controllers
             return Ok(item.AsToMovieDtos());
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] MovieParameters movieParameters)
         {
            var items = await _unitOfWork.MovieRepository.GetAllAsync();
            if(items == null) return BadRequest();
-           return Ok(items.AsToMovieDtosList());
+         
+           return Ok(items.Filter(movieParameters.MinDate, movieParameters.MaxDate)
+                     .Search(movieParameters.Search).AsToMovieDtosList().Shaper(movieParameters.Fields));
         }
 
         [HttpPut("{id}")]

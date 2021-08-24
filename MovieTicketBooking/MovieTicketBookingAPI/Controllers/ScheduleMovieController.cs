@@ -9,6 +9,7 @@ using MovieTicketBookingAPI.Data.Entities;
 using Dtos;
 using System.Text.Json;
 using Utilities.Extension;
+using Utilities.Extension.DataShaping;
 namespace MovieTicketBookingAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -50,11 +51,11 @@ namespace MovieTicketBookingAPI.Controllers
         }
         [HttpGet()]
 
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string fields = null)
         {
               var items = await _unitOfWork.ScheduleMovie.GetAllAsync();
             if (items is null) return BadRequest();
-            return Ok(items.AsToScheduleMovieViewsList());
+            return Ok(items.AsToScheduleMovieViewsList().Shaper(fields));
         }
 
         [HttpPut("{id}")]
