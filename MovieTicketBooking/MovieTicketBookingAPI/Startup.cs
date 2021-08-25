@@ -18,7 +18,7 @@ namespace MovieTicketBookingAPI
     using System.Text;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Core.Config;
-
+    using MovieTicketBookingAPI.Infrastructure.ActionFilter;
     /// <summary>
     /// Defines the <see cref="Startup" />.
     /// </summary>
@@ -72,7 +72,8 @@ namespace MovieTicketBookingAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieTicketBookingAPI", Version = "v1" });
             });
-
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidationMovieExistAtrribute>();
             // config JWT Authentication
 
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));

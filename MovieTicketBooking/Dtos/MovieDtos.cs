@@ -11,19 +11,20 @@ namespace Dtos
       
         public string Id { get; init; }
 
-        [Required]
+        [Required(ErrorMessage = "Name movie is a required")]
         public string Name { get; init; }
 
         public string time { get; init; }
 
-        [Required]
+        [Required(ErrorMessage = "Description is a required")]
         public string Description { get; init; }
 
 
      
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}",ApplyFormatInEditMode =true)]
-        [Required]
-        public string PublishedYear { get; init; }
+
+        [Required(ErrorMessage = "PublishedYear is a required")]
+        public string PublishedYear { get; set; }
      
     }
 

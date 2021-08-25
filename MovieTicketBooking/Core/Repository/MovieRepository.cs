@@ -21,7 +21,7 @@ namespace Core.Repository
         public override async Task<Movie> AddAsync(Movie item)
         {
            var existMovie = await _dbSet.FirstOrDefaultAsync(x => x.Name == item.Name.ToLower());
-            if (existMovie is not  null) throw new MovieTicketBookingExceptions("Exist movie!");
+       
             await _dbSet.AddAsync(item);
             return item;
         }
@@ -29,7 +29,7 @@ namespace Core.Repository
         public override async Task<bool> UpdateAsync(string id, Movie item)
         {
            var existMovie = await _dbSet.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id) );
-           if (existMovie is null)  throw new MovieTicketBookingExceptions("Is not exist Movie");
+        
 
             var existMovieName = await _dbSet.FirstOrDefaultAsync(x => x.Id != Guid.Parse(id) && x.Name == item.Name);
             if (existMovieName is not null) throw new MovieTicketBookingExceptions("Name movie is exist");
@@ -47,8 +47,7 @@ namespace Core.Repository
         {
             var existMovie = await _dbContext.Movies.AsTracking().Include(x => x.ScheduledMovies).FirstOrDefaultAsync(x => x.Id == id);
             
-            if (existMovie is null) throw new MovieTicketBookingExceptions("Movie is not exist");
-
+ 
             if (existMovie.ScheduledMovies.Count > 0) throw new MovieTicketBookingExceptions("Schedule movie is has exist");
              
             _dbSet.Remove(existMovie);
@@ -58,8 +57,7 @@ namespace Core.Repository
         public override async Task<Movie> GetByIdAsync(Guid id)
         {
             var existMovie = await _dbContext.Movies.AsTracking()
-                                                    .Include(x => x.ScheduledMovies).FirstOrDefaultAsync(x => x.Id == id);
-            if (existMovie is null) throw new MovieTicketBookingExceptions("Movie is not exist");                                   
+                                                    .Include(x => x.ScheduledMovies).FirstOrDefaultAsync(x => x.Id == id);                                 
              return existMovie;
         }
         public override async Task<IEnumerable<Movie>> GetAllAsync()

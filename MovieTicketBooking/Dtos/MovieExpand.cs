@@ -9,13 +9,13 @@ namespace Dtos
 {
   public  class MovieExpand : MovieDtos
     {
-        [Required]
+        [Required(ErrorMessage ="Hours is a required")]
         public int Hours { get; init; }
 
-        [Required]
+        [Required(ErrorMessage = "Minutes is a required")]
         public int Minutes { get; init; }
 
-        [Required]
+        [Required(ErrorMessage = "Second is a required")]
         public int Second { get; init; }
     }
 }

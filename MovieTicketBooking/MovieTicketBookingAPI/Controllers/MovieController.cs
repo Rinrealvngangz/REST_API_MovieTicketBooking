@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MovieTicketBookingAPI.Data.Entities;
 using Dtos;
+using MovieTicketBookingAPI.Infrastructure.ActionFilter;
 using System.Globalization;
 using Utilities.Extension;
 using System.Security.Policy;
@@ -25,40 +26,33 @@ namespace MovieTicketBookingAPI.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidationMovieExistAtrribute))]
         public async Task<IActionResult> CreateMovie([FromBody] MovieExpand movie)
         {
-          
-            if (!ModelState.IsValid) return BadRequest();
-            DateTime publishYear;    
-         var validDate =   DateTime.TryParseExact(
-           movie.PublishedYear,
-           "MM-dd-yyyy",
-           CultureInfo.InvariantCulture,
-           DateTimeStyles.None,
-           out publishYear);
-            if (validDate == false) return BadRequest("Error format time (MM-dd-yyyy)");
-      
+     
             var newMovie = new Movie
             {
                 Id = new Guid(),
                 Name = movie.Name,
                 Minutes = new TimeSpan(movie.Hours, movie.Minutes, movie.Second),
                 Description = movie.Description,
-                PublishedYear = publishYear
+                PublishedYear = DateTime.Parse(movie.PublishedYear)
             };
           var item =  await _unitOfWork.MovieRepository.AddAsync(newMovie);
             await _unitOfWork.CompleteAsync();
             if (item == null) return BadRequest();
             return CreatedAtAction(nameof(Get) ,new { id = item.Id } ,item.AsToMovieDtos() );
         }
-        [HttpGet("{id}")]
 
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{id}")]
+        [ServiceFilter(typeof(ValidationMovieExistAtrribute))]
+        public IActionResult Get(Guid id)
         {
-          var item = await  _unitOfWork.MovieRepository.GetByIdAsync(Guid.Parse(id));
-          if(item == null)  return BadRequest();
+            var item =  HttpContext.Items["movie"] as Movie;
             return Ok(item.AsToMovieDtos());
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] MovieParameters movieParameters)
         {
@@ -74,38 +68,29 @@ namespace MovieTicketBookingAPI.Controllers
         }
 
         [HttpPut("{id}")]
-
-        public async Task<IActionResult> Update(string id,[FromBody]MovieExpand movie)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidationMovieExistAtrribute))]
+        public async Task<IActionResult> Update(Guid id,[FromBody]MovieExpand movie)
         {
-            if (!ModelState.IsValid) return BadRequest();
-
-            DateTime publishYear;
-            var validDate = DateTime.TryParseExact(
-              movie.PublishedYear,
-              "MM-dd-yyyy",
-              CultureInfo.InvariantCulture,
-              DateTimeStyles.None,
-              out publishYear);
-            if (validDate == false) return BadRequest("Error format time (MM-dd-yyyy)");
-
-
             var movieUpdate = new Movie
             {
                 Name = movie.Name,
                 Minutes = new TimeSpan(movie.Hours, movie.Minutes, movie.Second),
                 Description = movie.Description,
-                PublishedYear = publishYear
+                PublishedYear = DateTime.Parse(movie.PublishedYear)
             };
-           var result = await _unitOfWork.MovieRepository.UpdateAsync(id, movieUpdate);
+           var result = await _unitOfWork.MovieRepository.UpdateAsync(id.ToString(), movieUpdate);
             await _unitOfWork.CompleteAsync();
            if(!result) return BadRequest();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [ServiceFilter(typeof(ValidationMovieExistAtrribute))]
+        public async Task<IActionResult> Delete(Guid id)
         {
-           var result = await _unitOfWork.MovieRepository.DeleteAsync(Guid.Parse(id));
+            var item = HttpContext.Items["movie"] as Movie;
+           var result = await _unitOfWork.MovieRepository.DeleteAsync(item.Id);
             await _unitOfWork.CompleteAsync();
             if (!result) return BadRequest();
             return NoContent();
