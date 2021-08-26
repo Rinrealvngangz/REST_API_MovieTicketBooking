@@ -19,6 +19,7 @@ namespace MovieTicketBookingAPI
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Core.Config;
     using MovieTicketBookingAPI.Infrastructure.ActionFilter;
+    using Utilities.Exceptions;
     /// <summary>
     /// Defines the <see cref="Startup" />.
     /// </summary>
@@ -124,6 +125,8 @@ namespace MovieTicketBookingAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieTicketBookingAPI v1"));
             }
 
+            //  app.ConfigureExceptionHandler();
+            app.ConfigureCustomExceptionMiddlware();
             app.UseHttpsRedirection();
 
             app.UseRouting();

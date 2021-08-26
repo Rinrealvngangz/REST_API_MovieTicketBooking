@@ -50,6 +50,7 @@ namespace MovieTicketBookingAPI.Controllers
         public IActionResult Get(Guid id)
         {
             var item =  HttpContext.Items["movie"] as Movie;
+            
             return Ok(item.AsToMovieDtos());
         }
 
@@ -57,7 +58,7 @@ namespace MovieTicketBookingAPI.Controllers
         public async Task<IActionResult> GetAll([FromQuery] MovieParameters movieParameters)
         {
            var items = await _unitOfWork.MovieRepository.GetAllAsync();
-           if(items == null) return BadRequest();
+            if (items == null) return BadRequest();
             var result = PagedList<Movie>.ToPagedList(items, movieParameters.PageNumber,movieParameters.PageSize)
                                          .Filter(movieParameters.MinDate, movieParameters.MaxDate)
                                          .Sort(movieParameters.Sort)
